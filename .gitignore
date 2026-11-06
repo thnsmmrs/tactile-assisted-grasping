@@ -1,0 +1,11 @@
+
+# Python environment
+.venv/
+__pycache__/
+*.pyc
+
+# Generated logs
+*.log
+
+# PlatformIO build files
+.pio/
