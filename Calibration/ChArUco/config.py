@@ -49,6 +49,6 @@ CAPTURED_DIR        = str(ROOT / "data" / "captured_undistorted")
 # =============================================================================
 # CALIBRATION OPTIONS
 # =============================================================================
-FIX_K3 = False   # True = do not estimate the k3 radial term. Try this if the
+FIX_K3 = True   # True = do not estimate the k3 radial term. Try this if the
                  # calibration shows a huge |k3| (overfitting) or the undistorted
                  # image looks wavy near the edges. See docs/troubleshooting.md

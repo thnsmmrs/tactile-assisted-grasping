@@ -1,0 +1,37 @@
+============================================================
+  CAMERA CALIBRATION RESULTS
+============================================================
+  Images used       : 18
+  Image size        : 1280 × 960 px
+  RMS reprojection  : 0.26350 px
+
+  Camera Matrix (intrinsics):
+    fx = 803.1895   fy = 802.6123
+    cx = 615.1633   cy = 467.2827
+
+  Distortion Coefficients:
+    k1=-0.330609  k2=-1.142478
+    p1=0.008509  p2=0.006438  k3=0.000000
+
+  Per-image RMS (px):
+    [  1] charuco_1793996335539285209.png            0.26555
+    [  2] charuco_1793996338500386192.png            0.16975
+    [  3] charuco_1793996339603277573.png            0.31456
+    [  4] charuco_1793996339765058682.png            0.21316
+    [  5] charuco_1793996339917720656.png            0.24919
+    [  6] charuco_1793996340072817830.png            0.21065
+    [  7] charuco_1793996340209276409.png            0.24198
+    [  8] charuco_1793996346430419454.png            0.28168
+    [  9] charuco_1793996377452579030.png            0.27862
+    [ 10] charuco_1793996382550411525.png            0.30146
+    [ 11] charuco_1793996386156554868.png            0.26779
+    [ 12] charuco_1793996392998767512.png            0.19836
+    [ 13] charuco_1793996394767884999.png            0.22176
+    [ 14] charuco_1793996395149251451.png            0.28676
+    [ 15] charuco_1793996395565568274.png            0.37701
+    [ 16] charuco_1793996395945825925.png            0.22625
+    [ 17] charuco_1793996416323133816.png            0.26988
+    [ 18] charuco_1793996416487564813.png            0.21668
+
+  Saved to : /home/disl/ethans_files/tactile-assisted-grasping/Calibration/ChArUco/data/calibration_results/calibration.yaml
+============================================================
