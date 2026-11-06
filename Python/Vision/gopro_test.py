@@ -58,15 +58,15 @@ def main():
 
             fps = 1 / dt if dt > 0 else 0
 
-            cv2.putText(
-                frame,
-                f"FPS: {fps:.1f}",
-                (20, 40),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                1,
-                (0, 255, 0),
-                2
-            )
+           # cv2.putText(
+           #     frame,
+           #     f"FPS: {fps:.1f}",
+           #     (20, 40),
+           #     cv2.FONT_HERSHEY_SIMPLEX,
+           #     1,
+           #     (0, 255, 0),
+           #     2
+           # )
 
             cv2.imshow("UR5e GoPro Vision", frame)
 
