@@ -1,0 +1,62 @@
+//
+// !!! WARNING !!! AUTO-GENERATED FILE!
+// PLEASE DO NOT MODIFY IT AND USE "platformio.ini":
+// https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags
+//
+{
+    "configurations": [
+        {
+            "name": "PlatformIO",
+            "includePath": [
+                "/home/disl/Documents/PlatformIO/Projects/TactileGripper/include",
+                "/home/disl/Documents/PlatformIO/Projects/TactileGripper/src",
+                "/home/disl/Documents/PlatformIO/Projects/TactileGripper/.pio/libdeps/megaatmega2560/DFRobot_TactileSensor/src",
+                "/home/disl/Documents/PlatformIO/Projects/TactileGripper/.pio/libdeps/megaatmega2560/DFRobot_RTU@src-6183630edd531bc8b4f90f6dae4d4ce4/src",
+                "/home/disl/.platformio/packages/framework-arduino-avr/cores/arduino",
+                "/home/disl/.platformio/packages/framework-arduino-avr/variants/mega",
+                "/home/disl/Documents/PlatformIO/Projects/TactileGripper/.pio/libdeps/megaatmega2560/DFRobot_RTU/src",
+                "/home/disl/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                "/home/disl/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+                "/home/disl/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                "/home/disl/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                "/home/disl/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+                ""
+            ],
+            "browse": {
+                "limitSymbolsToIncludedHeaders": true,
+                "path": [
+                    "/home/disl/Documents/PlatformIO/Projects/TactileGripper/include",
+                    "/home/disl/Documents/PlatformIO/Projects/TactileGripper/src",
+                    "/home/disl/Documents/PlatformIO/Projects/TactileGripper/.pio/libdeps/megaatmega2560/DFRobot_TactileSensor/src",
+                    "/home/disl/Documents/PlatformIO/Projects/TactileGripper/.pio/libdeps/megaatmega2560/DFRobot_RTU@src-6183630edd531bc8b4f90f6dae4d4ce4/src",
+                    "/home/disl/.platformio/packages/framework-arduino-avr/cores/arduino",
+                    "/home/disl/.platformio/packages/framework-arduino-avr/variants/mega",
+                    "/home/disl/Documents/PlatformIO/Projects/TactileGripper/.pio/libdeps/megaatmega2560/DFRobot_RTU/src",
+                    "/home/disl/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+                    "/home/disl/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+                    "/home/disl/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+                    "/home/disl/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+                    "/home/disl/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+                    ""
+                ]
+            },
+            "defines": [
+                "PLATFORMIO=60200",
+                "ARDUINO_AVR_MEGA2560",
+                "F_CPU=16000000L",
+                "ARDUINO_ARCH_AVR",
+                "ARDUINO=10808",
+                "__AVR_ATmega2560__",
+                ""
+            ],
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++11",
+            "compilerPath": "/home/disl/.platformio/packages/toolchain-atmelavr/bin/avr-gcc",
+            "compilerArgs": [
+                "-mmcu=atmega2560",
+                ""
+            ]
+        }
+    ],
+    "version": 4
+}
