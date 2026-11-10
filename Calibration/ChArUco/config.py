@@ -19,9 +19,9 @@ ROOT = Path(__file__).resolve().parent
 # CAMERA SETTINGS
 # =============================================================================
 CAMERA_INDEX  = 0           # 0 = first camera (/dev/video0). Try 1, 2 ... for others
-CAMERA_WIDTH  = 1280        # must be a mode your camera supports
+CAMERA_WIDTH  = 1920       # must be a mode your camera supports
                             # (Linux: v4l2-ctl --list-formats-ext -d /dev/video0)
-CAMERA_HEIGHT = 960
+CAMERA_HEIGHT = 1080
 CAMERA_FPS    = 30
 CAMERA_CODEC  = "MJPG"      # 4-char FourCC string
 
@@ -31,8 +31,8 @@ CAMERA_CODEC  = "MJPG"      # 4-char FourCC string
 # =============================================================================
 SQUARES_X        = 8                               # columns
 SQUARES_Y        = 6                               # rows
-SQUARE_LENGTH    = 0.030                           # metres (30 mm) -> board needs A4 LANDSCAPE
-MARKER_LENGTH    = 0.022                           # metres (22 mm)
+SQUARE_LENGTH    = 0.0265                           # metres (30 mm) -> board needs A4 LANDSCAPE
+MARKER_LENGTH    = 0.01943                           # metres (22 mm)
 ARUCO_DICTIONARY = "DICT_5X5_50"                  # must match generate_charuco.py
 
 
