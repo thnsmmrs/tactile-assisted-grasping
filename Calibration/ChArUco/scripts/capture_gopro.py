@@ -1,145 +1,74 @@
-"""Capture full-resolution GoPro calibration frames for ChArUco.
+"""Capture ChArUco calibration images from GoPro HDMI through Elgato HD60 X.
 
-Place this file at Calibration/ChArUco/scripts/capture_gopro.py.
-Run from your project's virtual environment:
+From repo root:
     python Calibration/ChArUco/scripts/capture_gopro.py
 
-Space: save current unmodified frame; Q: quit.
+SPACE saves a full-resolution clean frame; Q quits.
 """
 
-from pathlib import Path
-import threading
 import time
+from pathlib import Path
 
 import cv2
-import requests
 
-import sys
-from pathlib import Path
+DEVICE = "/dev/video0"
+WIDTH, HEIGHT, FPS = 1920, 1080, 30
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "Python" / "RobotControl"))
-
-from waypoints import go_to_obs, go_home
-
-
-GOPRO_IP = "172.29.189.51"
-BASE_URL = f"http://{GOPRO_IP}:8080"
-STREAM_URL = "udp://@0.0.0.0:8554?fifo_size=100000&overrun_nonfatal=1"
+# Script lives in Calibration/ChArUco/scripts/
 SAVE_DIR = Path(__file__).resolve().parents[1] / "data" / "calibration_images"
+SAVE_DIR.mkdir(parents=True, exist_ok=True)
 
-
-def camera_command(action):
-    response = requests.get(f"{BASE_URL}/gopro/camera/stream/{action}", timeout=5)
-    response.raise_for_status()
-
-
-class LatestFrameCapture:
-    """Read frames continuously so the UI doesn't build up a decoder backlog."""
-
-    def __init__(self, url):
-        self.cap = cv2.VideoCapture(url, cv2.CAP_FFMPEG)
-        if not self.cap.isOpened():
-            raise RuntimeError("Could not open GoPro UDP video stream")
-        self.frame = None
-        self.received_at = 0.0
-        self.lock = threading.Lock()
-        self.running = True
-        self.failed = False
-        self.thread = threading.Thread(target=self._update, daemon=True)
-        self.thread.start()
-
-    def _update(self):
-        failures = 0
-        while self.running:
-            ok, frame = self.cap.read()
-            if not ok:
-                failures += 1
-                if failures >= 10:
-                    self.failed = True
-                    break
-                time.sleep(0.05)
-                continue
-            failures = 0
-            with self.lock:
-                self.frame = frame
-                self.received_at = time.monotonic()
-        self.running = False
-
-    def read(self):
-        with self.lock:
-            if self.frame is None or time.monotonic() - self.received_at > 1.0:
-                return None
-            return self.frame.copy()
-
-    def stop(self):
-        self.running = False
-        self.thread.join(timeout=2.0)
-        if not self.thread.is_alive():
-            self.cap.release()
-        else:
-            print("Warning: video reader is still stopping; exiting process")
+PIPELINE = (
+    "v4l2src device=/dev/video0 io-mode=mmap ! "
+    "video/x-raw,format=NV12,width=1920,height=1080,framerate=30/1 ! "
+    "videoconvert ! video/x-raw,format=BGR ! "
+    "appsink drop=true max-buffers=1 sync=false"
+)
 
 
 def main():
-    SAVE_DIR.mkdir(parents=True, exist_ok=True)
-    camera = None
-    stream_started = False
-    saved_count = 0
+    cap = cv2.VideoCapture(PIPELINE, cv2.CAP_GSTREAMER)
+    if not cap.isOpened():
+        raise RuntimeError(f"Cannot open {DEVICE}. Check Elgato connection and GStreamer support.")
 
-    go_to_obs()
+    saved = 0
+    last_save = 0.0
+    cv2.namedWindow("ChArUco HDMI capture", cv2.WINDOW_NORMAL)
+
     try:
-        # Reset a leftover session from another program.
-        try:
-            camera_command("stop")
-        except requests.RequestException as exc:
-            print(f"Stream reset warning: {exc}")
-        time.sleep(0.5)
-
-        camera_command("start")
-        stream_started = True
-        camera = LatestFrameCapture(STREAM_URL)
-
-        print(f"Saving images to: {SAVE_DIR}")
         print("SPACE = save image | Q = quit")
+        print(f"Output: {SAVE_DIR}")
+
         while True:
-            if camera.failed:
-                raise RuntimeError("GoPro video capture stopped after repeated failures")
+            ok, frame = cap.read()
+            if not ok or frame is None:
+                print("Frame read failed; stopping capture.")
+                break
 
-            frame = camera.read()
-            if frame is not None:
-                # Only the preview gets annotations; saved images remain untouched.
-                preview = frame.copy()
-                cv2.putText(preview, "SPACE: save  |  Q: quit", (20, 40),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
-                cv2.imshow("ChArUco calibration capture", preview)
+            h, w = frame.shape[:2]
+            if (w, h) != (WIDTH, HEIGHT):
+                raise RuntimeError(f"Unexpected frame size: {w}x{h}, expected {WIDTH}x{HEIGHT}")
 
+            preview = frame.copy()
+            cv2.putText(preview, f"SPACE: save | Q: quit | Saved: {saved}",
+                        (25, 45), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+            cv2.imshow("ChArUco HDMI capture", preview)
             key = cv2.waitKey(1) & 0xFF
+
             if key == ord("q"):
                 break
-                go_home()
-            if key == 32:
-                if frame is None:
-                    print("No fresh frame available; not saving")
-                    continue
-                filepath = SAVE_DIR / f"charuco_{time.time_ns()}.png"
-                if not cv2.imwrite(str(filepath), frame):
-                    print(f"ERROR saving {filepath}")
-                    continue
-                saved_count += 1
-                print(f"Saved #{saved_count}: {filepath.name} ({frame.shape[1]}x{frame.shape[0]})")
-            time.sleep(0.005)
-
+            if key == 32 and time.monotonic() - last_save > 0.35:
+                path = SAVE_DIR / f"charuco_{time.time_ns()}.png"
+                if cv2.imwrite(str(path), frame):
+                    saved += 1
+                    last_save = time.monotonic()
+                    print(f"Saved {saved}: {path.name} ({w}x{h})")
+                else:
+                    print(f"Failed to save {path}")
     finally:
-        if camera is not None:
-            camera.stop()
+        cap.release()
         cv2.destroyAllWindows()
-        if stream_started:
-            try:
-                camera_command("stop")
-            except requests.RequestException as exc:
-                print(f"GoPro stop warning: {exc}")
-        print(f"Captured {saved_count} images")
+        print(f"Capture ended; saved {saved} images.")
 
 
 if __name__ == "__main__":
