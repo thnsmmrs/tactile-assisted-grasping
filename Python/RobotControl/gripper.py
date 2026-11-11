@@ -8,11 +8,7 @@ GRIPPER_PORT = 63352
 
 def command(sock, message):
     sock.sendall((message + "\n").encode())
-
-    response = sock.recv(1024).decode().strip()
-
-    print(f"{message} -> {response}")
-    return response
+    return sock.recv(1024).decode().strip()
 
 
 class Gripper:
@@ -90,7 +86,17 @@ class Gripper:
         self.close_connection()
 
 
-def main():
+def open_gripper():
+    with Gripper() as gripper:
+        return gripper.open()
+
+
+def close_gripper():
+    with Gripper() as gripper:
+        return gripper.close()
+
+
+def test():
     print("Testing Hand-E. Keep fingers and objects clear.")
 
     with Gripper() as gripper:
@@ -99,6 +105,3 @@ def main():
         gripper.close()
         print("Gripper test complete.")
 
-
-if __name__ == "__main__":
-    main()
