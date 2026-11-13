@@ -12,8 +12,8 @@ PIXEL_AXES = np.array([
     [11.0, 170.0]
 ])
 
-X_OFFSET = 0.004
-Y_OFFSET = 0.000
+X_OFFSET = -0.008
+Y_OFFSET = 0.016
 
 def pixel_to_robot(u, v):
     pixel_offset = np.array([u, v]) - REFERENCE_PIXEL

@@ -16,8 +16,8 @@ ROBOT_IP = "172.16.34.2"
 rtde_c = rtde_control.RTDEControlInterface(ROBOT_IP)
 rtde_r = rtde_receive.RTDEReceiveInterface(ROBOT_IP)
 
-waypoints.go_home(rtde_c)
-time.sleep(2)
+#waypoints.go_home(rtde_c)
+#time.sleep(2)
 #go to observation point
 open_gripper()
 waypoints.go_to_obs(rtde_c) 
@@ -43,6 +43,7 @@ while True:
     if not ret:
         break
     centroid, bounds = object.detect_object(frame)
+    #cv2.imshow("Object Detection", frame)
     if centroid is not None:
         u, v = centroid
 
@@ -63,7 +64,7 @@ while True:
             print("Grasp sequence completed.")
             time.sleep(2)
             open_gripper()
-            waypoints.go_home(rtde_c)
+            waypoints.go_to_obs(rtde_c)
             break
         
     if cv2.waitKey(1) & 0xFF == ord("q"):

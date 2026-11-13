@@ -82,7 +82,7 @@ def approach_and_descend(rtde_c, rtde_r, X, Y, close_gripper,enable_motion=False
             return False
 
     # Stage 1: Joint-space movement to elevated position
-    rtde_c.moveJ(approach_joints, 0.2, 0.1)
+    rtde_c.moveJ(approach_joints, 0.6, 0.1)
     print("Approach movement completed.")
 
     if not AUTO_MODE:
@@ -91,7 +91,7 @@ def approach_and_descend(rtde_c, rtde_r, X, Y, close_gripper,enable_motion=False
             print("Descent cancelled.")
             return False
 
-    rtde_c.moveL(grasp_pose, 0.05, 0.05)
+    rtde_c.moveL(grasp_pose, 0.3, 0.05)
     print("Descent completed.")
 
     if not AUTO_MODE:
@@ -112,7 +112,7 @@ def approach_and_descend(rtde_c, rtde_r, X, Y, close_gripper,enable_motion=False
             print("Lift cancelled.")
             return False
 
-    rtde_c.moveL(approach_pose, 0.02, 0.05)
+    #rtde_c.moveL(approach_pose, 0.02, 0.05)
 
     print("Lift completed. Holding object.")
     return True

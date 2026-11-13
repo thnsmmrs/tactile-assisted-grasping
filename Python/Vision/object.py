@@ -3,8 +3,8 @@ import cv2
 def detect_object(frame):
     h, w = frame.shape[:2]
 
-    x1, x2 = int(w * 0.3), int(w * 0.7)
-    y1, y2 = int(h * 0.3), int(h * 0.7)
+    x1, x2 = int(w * 0.3), int(w * 0.65)
+    y1, y2 = int(h * 0.1), int(h * 0.7)
 
     roi = frame[y1:y2, x1:x2]
     hsv = cv2.cvtColor(roi, cv2.COLOR_BGR2HSV)
