@@ -16,8 +16,8 @@ ROBOT_IP = "172.16.34.2"
 rtde_c = rtde_control.RTDEControlInterface(ROBOT_IP)
 rtde_r = rtde_receive.RTDEReceiveInterface(ROBOT_IP)
 
-#waypoints.go_home(rtde_c)
-#time.sleep(2)
+waypoints.go_home(rtde_c)
+time.sleep(2)
 #go to observation point
 open_gripper()
 waypoints.go_to_obs(rtde_c) 
@@ -43,7 +43,8 @@ while True:
     if not ret:
         break
     centroid, bounds = object.detect_object(frame)
-    #cv2.imshow("Object Detection", frame)
+
+
     if centroid is not None:
         u, v = centroid
 
@@ -52,6 +53,9 @@ while True:
         print(f"Average centroid: ({u:.2f}, {v:.2f})")
         print(f"Robot target: X={X:.4f}, Y={Y:.4f}")
 
+        cv2.circle(frame, (u, v), 6, (0, 255, 255), -1)
+        cv2.imshow("Object Detection", frame)
+        cv2.waitKey(0)
         success = grasp_motion.approach_and_descend(
             rtde_c,
             rtde_r,
