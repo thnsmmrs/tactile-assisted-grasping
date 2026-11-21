@@ -2,6 +2,7 @@
 import numpy as np
 from RobotControl import UR5e_IK
 from RobotControl.gripper import close_gripper
+from scipy.spatial.transform import Rotation as R
 
 # Manually taught pose with 30 mm cube centered between fingers
 GRASP_REFERENCE = [
@@ -22,7 +23,7 @@ MAX_XY_OFFSET = 1.00
 
 AUTO_MODE = True
 
-def approach_and_descend(rtde_c, rtde_r, X, Y, close_gripper,enable_motion=False):
+def approach_and_descend(rtde_c, rtde_r, X, Y, close_gripper,angle=0.0,enable_motion=False):
     """
     Approach above the cube, then descend to taught grasp Z.
 
@@ -47,6 +48,13 @@ def approach_and_descend(rtde_c, rtde_r, X, Y, close_gripper,enable_motion=False
     grasp_pose[0] = X
     grasp_pose[1] = Y
     grasp_pose[2] += GRASP_Z_OFFSET
+    # Rotate gripper around robot-base Z to align with cube
+    base_orientation = R.from_rotvec(grasp_pose[3:6])
+    z_rotation = R.from_euler("z", angle)
+
+    grasp_pose[3:6] = (
+        z_rotation * base_orientation
+    ).as_rotvec().tolist()
 
     # Build elevated approach pose
     approach_pose = grasp_pose.copy()

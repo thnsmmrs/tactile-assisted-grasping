@@ -1,9 +1,10 @@
 import cv2
+import numpy as np
 
 def detect_object(frame):
     h, w = frame.shape[:2]
 
-    x1, x2 = int(w * 0.3), int(w * 0.65)
+    x1, x2 = int(w * 0.3), int(w * 0.9)
     y1, y2 = int(h * 0.1), int(h * 0.7)
 
     roi = frame[y1:y2, x1:x2]
@@ -18,18 +19,22 @@ def detect_object(frame):
     )
 
     if not contours:
-        return None, None
+        return None, None, None
 
     contour = max(contours, key=cv2.contourArea)
-
-    if cv2.contourArea(contour) < 300:
-        return None, None
+    rect = cv2.minAreaRect(contour)
+    box = cv2.boxPoints(rect)
+    box = np.int32(box)
+    box[:, 0] += x1
+    box[:, 1] += y1
+    if cv2.contourArea(contour) < 200:
+        return None, None, None
 
     # Centroid
     M = cv2.moments(contour)
 
     if M["m00"] == 0:
-        return None, None
+        return None, None, None
 
     u = int(M["m10"] / M["m00"]) + x1
     v = int(M["m01"] / M["m00"]) + y1
@@ -40,4 +45,4 @@ def detect_object(frame):
     # Convert ROI-relative bounds to full image coordinates
     bounds = (x + x1, y + y1, width, height)
 
-    return (u,v), bounds
+    return (u,v), bounds, box
